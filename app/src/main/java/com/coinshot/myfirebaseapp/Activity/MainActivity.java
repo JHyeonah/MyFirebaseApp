@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.textclassifier.TextLinks;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -43,6 +44,11 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
+import java.io.IOException;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -145,6 +151,15 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(TAG, token);
                     }
                 });
+/*
+        OkHttpClient.Builder httpBuilder = new OkHttpClient.Builder();
+        httpBuilder.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request.Builder requestBuilder = chain.request().newBuilder();
+                requestBuilder.header
+            }
+        })*/
     }
 
     @Override
