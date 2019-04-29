@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MyFirebaseApp</string>
+    <string name="facebook_app_id">325711534807043</string> <string name="fb_login_protocol_scheme">fb325711534807043</string>
+    <string name="default_notification_channel_id">My Firebase App</string>
+</resources>
