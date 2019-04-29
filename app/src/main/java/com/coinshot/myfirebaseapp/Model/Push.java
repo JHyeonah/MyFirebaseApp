@@ -1,5 +1,7 @@
 package com.coinshot.myfirebaseapp.Model;
 
+import android.util.Log;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -18,6 +20,8 @@ public class Push {
         this.to = to;
         this.priority = priority;
         new Data(title, message);
+
+        Log.d("LOGIN", message);
     }
 
     public String getTo() {

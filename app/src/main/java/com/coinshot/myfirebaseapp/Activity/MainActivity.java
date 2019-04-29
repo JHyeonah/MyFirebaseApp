@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             String email = user.getEmail();
                             message = "구글로 로그인 했습니다.";
-                            setMessage(TO,PRIORITY,TITLE,message);
+                            //setMessage(TO,PRIORITY,TITLE,message);
 
                             Toast.makeText(MainActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
 
@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             String email = "";
                             message = "페이스북으로 로그인 했습니다.";
-                            setMessage(TO,PRIORITY,TITLE,message);
+                            //setMessage(TO,PRIORITY,TITLE,message);
 
                             if(user.getEmail() != null){
                                 email = user.getEmail();
@@ -282,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
+/*
     private void setMessage(String to, String priority, String title, String message){
         fcmService.postFCMBody(new Push(to,priority,title,message)).enqueue(new Callback<Response>() {
             @Override
@@ -291,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
                     Response repo = response.body();
                     Log.d(TAG, "response.getSuccess : " + repo.getSuccess());
                 }else{
-                    Log.d(TAG, "body 없음");
+                    Log.d(TAG, "body 없음" );
                 }
             }
 
@@ -300,5 +300,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onFailure 실행됨"+ t.toString());
             }
         });
-    }
+    }*/
+
+    // private void sendPostToFCM
 }
