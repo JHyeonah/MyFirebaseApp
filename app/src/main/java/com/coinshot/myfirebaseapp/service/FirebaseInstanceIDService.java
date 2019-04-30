@@ -56,7 +56,7 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
             String channel_name = getString(R.string.default_notification_channel_id);
 
             NotificationManager notichannel = (android.app.NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-            NotificationChannel channelMsg = new NotificationChannel(channel, channel_name, NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel channelMsg = new NotificationChannel(channel, channel_name, NotificationManager.IMPORTANCE_HIGH);
             channelMsg.setDescription("채널 설명");
             channelMsg.enableLights(true);
             channelMsg.enableVibration(true);
