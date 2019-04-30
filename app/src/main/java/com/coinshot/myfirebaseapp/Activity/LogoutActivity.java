@@ -15,7 +15,7 @@ import com.facebook.login.widget.LoginButton;
 
 public class LogoutActivity extends AppCompatActivity {
     TextView emailText;
-    Button googleSignOutBtn;
+    Button googleSignOutBtn, pushBtn;
     LoginButton facebookLoginButton;
     private static final int RC_SIGN_OUT = 300;
 
@@ -27,6 +27,7 @@ public class LogoutActivity extends AppCompatActivity {
         emailText = findViewById(R.id.emailText);
         googleSignOutBtn = findViewById(R.id.signOutBtn);
         facebookLoginButton = findViewById(R.id.facebookLoginButton);
+        pushBtn = findViewById(R.id.pushBtn);
 
         Intent intent = getIntent();
         String email = intent.getStringExtra("email");
@@ -42,8 +43,9 @@ public class LogoutActivity extends AppCompatActivity {
         googleSignOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
-                setResult(RC_SIGN_OUT, mainIntent);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                setResult(RC_SIGN_OUT, intent);
+                Toast.makeText(getApplicationContext(), "구글 로그아웃 성공", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -53,10 +55,18 @@ public class LogoutActivity extends AppCompatActivity {
             public void onClick(View v) {
                 LoginManager.getInstance().logOut();
 
-                Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(mainIntent);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
                 Toast.makeText(getApplicationContext(), "페이스북 로그아웃 성공", Toast.LENGTH_SHORT).show();
                 finish();
+            }
+        });
+
+        pushBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), PushActivity.class);
+                startActivity(intent);
             }
         });
     }

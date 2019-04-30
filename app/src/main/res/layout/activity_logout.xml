@@ -28,6 +28,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:text="Sign out"
+        android:textColor="#ffffff"
         android:id="@+id/signOutBtn"/>
 
     <com.facebook.login.widget.LoginButton
@@ -44,11 +45,13 @@
 
     <Button
         android:layout_width="200dp"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:text="@string/push_send"
         android:layout_below="@id/signOutBtn"
         android:layout_alignLeft="@+id/signOutBtn"
         android:layout_marginTop="10dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="#ffffff"
         android:id="@+id/pushBtn"/>
 
 </RelativeLayout>

@@ -63,11 +63,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 100;
     private static final int RC_SIGN_OUT = 300;
 
-    private final String TO = "fsoY-AyqeTk:APA91bGVA42yhPFyfRtREnOJFt7RmQGi4Aj-PLqt1tYLiSo6Nz-bfsUjbtfiEFCDWItrnbPey0tn2Kd1ErqscP8a2EP_pvHDPPw2Veao9x2Th8x_S7X7fxRStlmTtWyYzGpDMh_11D5e";
-    private final String KEY = "AAAA0qxo8nQ:APA91bEdUQrgLU-UiYUi7veXJFXPvKuj7VukwjjVUyEEPXnwJi4K2vC3-X92mlKrLAfZgo9a829waphnWFf16E081kI2GyMpt3-ksvPCPTGWTvfNDNYLXsE0JGQllmUITqafxGoQJ8iF";
-    private final String FCM_URL = "https://fcm.googleapis.com/fcm/send";
     private final String TITLE = "로그인 알림";
-    private String message = "";
 
     private GoogleSignInClient googleSignInClient;
     private FirebaseAuth firebaseAuth;
@@ -79,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
     LoginButton facebookLoginButton;
 
     final String TAG = "LOGIN";
-    //final FCMService fcmService = FCMService.retrofit.create(FCMService.class);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
 
         googleLoginButton = findViewById(R.id.googleLoginButton);
         facebookLoginButton = findViewById(R.id.facebookLoginButton);
-
         facebookLoginButton.setReadPermissions("email", "public_profile");
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -193,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.d(TAG, "signInCredential : success");
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             String email = user.getEmail();
-                            message = "구글로 로그인 했습니다.";
+                            String message = "구글로 로그인 했습니다.";
                             NetworkTask networkTask = new NetworkTask(message);
                             networkTask.execute();
 
@@ -224,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithCredentialFacebook : success");
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             String email = "";
-                            message = "페이스북으로 로그인 했습니다.";
+                            String message = "페이스북으로 로그인 했습니다.";
                             NetworkTask networkTask = new NetworkTask(message);
                             networkTask.execute();
 
@@ -266,7 +260,6 @@ public class MainActivity extends AppCompatActivity {
                         public void onResult(@NonNull Status status) {
                             if(status.isSuccess()){
                                 Log.d(TAG, "User logged out");
-                                Toast.makeText(getApplicationContext(), "구글 로그아웃 성공", Toast.LENGTH_SHORT).show();
                             }else{
                                 Log.d(TAG,"User log out failed");
                             }
@@ -281,26 +274,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-/*
-    private void setMessage(String to, String title, String message){
-        fcmService.postFCMBody(new Push(to,title,message)).enqueue(new Callback<Response>() {
-            @Override
-            public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
-                if(response.isSuccessful()){
-                    String repo = response.body().toString();
-                    Log.d(TAG, "response.getSuccess : " + repo.toString());
-                }else{
-                    Log.d(TAG, "body 없음" );
-                }
-            }
 
-            @Override
-            public void onFailure(Call<Response> call, Throwable t) {
-                Log.d(TAG, "onFailure 실행됨"+ t.toString());
-            }
-        });
-    }
-*/
     public class NetworkTask extends AsyncTask<Void, Void, String>{
         private String msg;
 
@@ -314,17 +288,17 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject root = new JSONObject();
                 JSONObject data = new JSONObject();
                 data.put("title", TITLE);
-                data.put("message", message);
-                root.put("to",TO);
+                data.put("message", msg);
+                root.put("to", getString(R.string.to));
                 root.put("data", data);
 
                 Log.d(TAG,root.toString());
-                URL url = new URL(FCM_URL);
+                URL url = new URL(getString(R.string.fcm_url));
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("POST");
                 con.setDoOutput(true);
                 con.setDoInput(true);
-                con.addRequestProperty("Authorization", "key=" + KEY);
+                con.addRequestProperty("Authorization", "key=" + getString(R.string.server_key));
                 con.addRequestProperty("Content-Type","application/json");
                 OutputStream os = con.getOutputStream();
                 os.write(root.toString().getBytes("utf-8"));
