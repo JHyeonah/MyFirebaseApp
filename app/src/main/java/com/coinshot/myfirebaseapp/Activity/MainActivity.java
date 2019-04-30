@@ -93,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
+        getToken();
+
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -138,21 +140,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG, error.toString());
             }
         });
-
-        // 디바이스 토큰값
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if(!task.isSuccessful()){
-                            Log.w(TAG, "getInstanceID failed", task.getException());
-                            return;
-                        }
-                        token = task.getResult().getToken();
-
-                        Log.d(TAG, token);
-                    }
-                });
     }
 
     @Override
@@ -241,6 +228,23 @@ public class MainActivity extends AppCompatActivity {
                             Log.e(TAG, "signInWithCredential : failure", task.getException());
                             Toast.makeText(getApplicationContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }
+                    }
+                });
+    }
+
+    // 디바이스 토큰값 받아옴
+    private void getToken(){
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if(!task.isSuccessful()){
+                            Log.w(TAG, "getInstanceID failed", task.getException());
+                            return;
+                        }
+                        token = task.getResult().getToken();
+
+                        Log.d(TAG, token);
                     }
                 });
     }
