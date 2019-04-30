@@ -1,4 +1,4 @@
-package com.coinshot.myfirebaseapp.Activity;
+package com.coinshot.myfirebaseapp.activity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;

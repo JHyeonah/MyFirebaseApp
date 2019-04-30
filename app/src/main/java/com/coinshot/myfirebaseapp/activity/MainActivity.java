@@ -1,4 +1,4 @@
-package com.coinshot.myfirebaseapp.Activity;
+package com.coinshot.myfirebaseapp.activity;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -8,14 +8,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.textclassifier.TextLinks;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.coinshot.myfirebaseapp.Model.Push;
-import com.coinshot.myfirebaseapp.Model.Response;
 import com.coinshot.myfirebaseapp.R;
-import com.coinshot.myfirebaseapp.Service.FCMService;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -47,17 +43,9 @@ import com.google.firebase.iid.InstanceIdResult;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import retrofit2.Call;
-import retrofit2.Callback;
 
 
 public class MainActivity extends AppCompatActivity {

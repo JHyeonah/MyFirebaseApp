@@ -1,4 +1,4 @@
-package com.coinshot.myfirebaseapp.Service;
+package com.coinshot.myfirebaseapp.service;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -10,7 +10,7 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.coinshot.myfirebaseapp.Activity.MainActivity;
+import com.coinshot.myfirebaseapp.activity.MainActivity;
 import com.coinshot.myfirebaseapp.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;

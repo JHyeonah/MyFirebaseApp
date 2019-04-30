@@ -1,7 +1,7 @@
-package com.coinshot.myfirebaseapp.Service;
+package com.coinshot.myfirebaseapp.service;
 
-import com.coinshot.myfirebaseapp.Model.Push;
-import com.coinshot.myfirebaseapp.Model.Response;
+import com.coinshot.myfirebaseapp.model.Push;
+import com.coinshot.myfirebaseapp.model.Response;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -9,7 +9,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
 
 public interface FCMService {
     @Headers({

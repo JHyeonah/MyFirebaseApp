@@ -1,4 +1,4 @@
-package com.coinshot.myfirebaseapp.Model;
+package com.coinshot.myfirebaseapp.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
