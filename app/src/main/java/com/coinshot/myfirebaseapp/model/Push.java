@@ -2,81 +2,41 @@ package com.coinshot.myfirebaseapp.model;
 
 import android.util.Log;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 public class Push {
-    @SerializedName("to")
-    @Expose
-    private String to;
-  /*  @SerializedName("priority")
-    @Expose
-    private String priority;*/
-    @SerializedName("data")
-    @Expose
-    private Data data;
+    public String to;
+    public Data data;
 
     public Push(String to, String title, String message){
         this.to = to;
-        //this.priority = priority;
-        new Data(title, message);
+        data = new Data(title, message);
 
         Log.d("LOGIN", message);
     }
 
-    public String getTo() {
-        return to;
+    @Override
+    public String toString() {
+        return "Push{" +
+                "to='" + to + '\'' +
+                ", data=" + data +
+                '}';
     }
 
-    public void setTo(String to) {
-        this.to = to;
-    }
-/*
-    public String getPriority() {
-        return priority;
-    }
+    public static class Data {
 
-    public void setPriority(String priority) {
-        this.priority = priority;
-    }*/
-
-    public Data getData() {
-        return data;
-    }
-
-    public void setData(Data data) {
-        this.data = data;
-    }
-
-    public class Data {
-
-        @SerializedName("title")
-        @Expose
-        private String title;
-        @SerializedName("message")
-        @Expose
-        private String message;
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
-        }
+        public String title;
+        public String message;
 
         public Data(String title, String message){
             this.title = title;
             this.message = message;
         }
 
+        @Override
+        public String toString() {
+            return "Data{" +
+                    "title='" + title + '\'' +
+                    ", message='" + message + '\'' +
+                    '}';
+        }
     }
 }
