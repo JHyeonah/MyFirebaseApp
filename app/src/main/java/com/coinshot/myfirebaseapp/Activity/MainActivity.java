@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_OUT = 300;
 
     private final String TITLE = "로그인 알림";
+    private String token = "";
 
     private GoogleSignInClient googleSignInClient;
     private FirebaseAuth firebaseAuth;
@@ -147,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.w(TAG, "getInstanceID failed", task.getException());
                             return;
                         }
-                        String token = task.getResult().getToken();
+                        token = task.getResult().getToken();
 
                         Log.d(TAG, token);
                     }
@@ -290,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject data = new JSONObject();
                 data.put("title", TITLE);
                 data.put("message", msg);
-                root.put("to", getString(R.string.to));
+                root.put("to", token);
                 root.put("data", data);
 
                 Log.d(TAG,root.toString());

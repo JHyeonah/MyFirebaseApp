@@ -5,7 +5,6 @@
     <string name="push_send">푸시 발송</string>
     <string name="title">제목</string>
     <string name="content">내용</string>
-    <string name="to">fsoY-AyqeTk:APA91bGVA42yhPFyfRtREnOJFt7RmQGi4Aj-PLqt1tYLiSo6Nz-bfsUjbtfiEFCDWItrnbPey0tn2Kd1ErqscP8a2EP_pvHDPPw2Veao9x2Th8x_S7X7fxRStlmTtWyYzGpDMh_11D5e</string>
     <string name="server_key">AAAA0qxo8nQ:APA91bEdUQrgLU-UiYUi7veXJFXPvKuj7VukwjjVUyEEPXnwJi4K2vC3-X92mlKrLAfZgo9a829waphnWFf16E081kI2GyMpt3-ksvPCPTGWTvfNDNYLXsE0JGQllmUITqafxGoQJ8iF</string>
     <string name="fcm_url">https://fcm.googleapis.com/fcm/send</string>
 </resources>

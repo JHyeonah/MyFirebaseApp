@@ -2,6 +2,7 @@ package com.coinshot.myfirebaseapp.Activity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -11,6 +12,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.coinshot.myfirebaseapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import org.json.JSONObject;
 
@@ -21,7 +26,7 @@ import java.net.URL;
 public class PushActivity extends AppCompatActivity {
     EditText title_et, content_et;
     Button sendBtn, cancelBtn;
-    String title, content;
+    String title, content, token;
 
     final String TAG = "LOGIN";
     @Override
@@ -33,6 +38,8 @@ public class PushActivity extends AppCompatActivity {
         content_et = findViewById(R.id.content_et);
         sendBtn = findViewById(R.id.sendBtn);
         cancelBtn = findViewById(R.id.cancelBtn);
+
+        getToken();
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +66,24 @@ public class PushActivity extends AppCompatActivity {
 
     }
 
+    private void getToken(){
+
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if(!task.isSuccessful()){
+                            Log.w(TAG, "getInstanceID failed", task.getException());
+                            return;
+                        }
+                        token = task.getResult().getToken();
+
+                        Log.d(TAG, token);
+
+                    }
+                });
+    }
+
     public class NetworkTask extends AsyncTask<Void, Void, String> {
         private String msg;
         private String title;
@@ -75,7 +100,7 @@ public class PushActivity extends AppCompatActivity {
                 JSONObject data = new JSONObject();
                 data.put("title", title);
                 data.put("message", msg);
-                root.put("to", getString(R.string.to));
+                root.put("to", token);
                 root.put("data", data);
 
                 Log.d(TAG,root.toString());
