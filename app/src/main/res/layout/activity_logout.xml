@@ -34,12 +34,21 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/emailText"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="60dp"
         android:paddingTop="17dp"
         android:paddingBottom="17dp"
         android:paddingLeft="20dp"
         android:layout_alignLeft="@+id/signOutBtn"
         android:id="@+id/facebookLoginButton"
         android:elevation="3dp"/>
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/push_send"
+        android:layout_below="@id/signOutBtn"
+        android:layout_alignLeft="@+id/signOutBtn"
+        android:layout_marginTop="10dp"
+        android:id="@+id/pushBtn"/>
 
 </RelativeLayout>

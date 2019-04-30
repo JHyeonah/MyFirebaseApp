@@ -9,16 +9,16 @@ public class Push {
     @SerializedName("to")
     @Expose
     private String to;
-    @SerializedName("priority")
+  /*  @SerializedName("priority")
     @Expose
-    private String priority;
+    private String priority;*/
     @SerializedName("data")
     @Expose
     private Data data;
 
-    public Push(String to, String priority, String title, String message){
+    public Push(String to, String title, String message){
         this.to = to;
-        this.priority = priority;
+        //this.priority = priority;
         new Data(title, message);
 
         Log.d("LOGIN", message);
@@ -31,14 +31,14 @@ public class Push {
     public void setTo(String to) {
         this.to = to;
     }
-
+/*
     public String getPriority() {
         return priority;
     }
 
     public void setPriority(String priority) {
         this.priority = priority;
-    }
+    }*/
 
     public Data getData() {
         return data;

@@ -1,6 +1,7 @@
 package com.coinshot.myfirebaseapp.Activity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -44,7 +45,12 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -57,8 +63,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 100;
     private static final int RC_SIGN_OUT = 300;
 
-    private final String TO = "e9no-fZcahA:APA91bHt8IMcQGZ0PgAZcga8Lffx2ZuxUp-HQZ0oa8Wplc5v_6WxRkRDoy9aPr9GGDdEWbh8nFXWD503r0ubBxF88uII3HS_aRgEl9dZmxLOzazYHNX4_vLcn8xnNE1sL9hHg29MyXIP";
-    private final String PRIORITY = "high";
+    private final String TO = "fsoY-AyqeTk:APA91bGVA42yhPFyfRtREnOJFt7RmQGi4Aj-PLqt1tYLiSo6Nz-bfsUjbtfiEFCDWItrnbPey0tn2Kd1ErqscP8a2EP_pvHDPPw2Veao9x2Th8x_S7X7fxRStlmTtWyYzGpDMh_11D5e";
+    private final String KEY = "AAAA0qxo8nQ:APA91bEdUQrgLU-UiYUi7veXJFXPvKuj7VukwjjVUyEEPXnwJi4K2vC3-X92mlKrLAfZgo9a829waphnWFf16E081kI2GyMpt3-ksvPCPTGWTvfNDNYLXsE0JGQllmUITqafxGoQJ8iF";
+    private final String FCM_URL = "https://fcm.googleapis.com/fcm/send";
     private final String TITLE = "로그인 알림";
     private String message = "";
 
@@ -72,8 +79,7 @@ public class MainActivity extends AppCompatActivity {
     LoginButton facebookLoginButton;
 
     final String TAG = "LOGIN";
-
-    final FCMService fcmService = FCMService.retrofit.create(FCMService.class);
+    //final FCMService fcmService = FCMService.retrofit.create(FCMService.class);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -151,15 +157,6 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(TAG, token);
                     }
                 });
-/*
-        OkHttpClient.Builder httpBuilder = new OkHttpClient.Builder();
-        httpBuilder.addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request.Builder requestBuilder = chain.request().newBuilder();
-                requestBuilder.header
-            }
-        })*/
     }
 
     @Override
@@ -197,7 +194,8 @@ public class MainActivity extends AppCompatActivity {
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             String email = user.getEmail();
                             message = "구글로 로그인 했습니다.";
-                            //setMessage(TO,PRIORITY,TITLE,message);
+                            NetworkTask networkTask = new NetworkTask(message);
+                            networkTask.execute();
 
                             Toast.makeText(MainActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
 
@@ -227,7 +225,8 @@ public class MainActivity extends AppCompatActivity {
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             String email = "";
                             message = "페이스북으로 로그인 했습니다.";
-                            //setMessage(TO,PRIORITY,TITLE,message);
+                            NetworkTask networkTask = new NetworkTask(message);
+                            networkTask.execute();
 
                             if(user.getEmail() != null){
                                 email = user.getEmail();
@@ -283,13 +282,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 /*
-    private void setMessage(String to, String priority, String title, String message){
-        fcmService.postFCMBody(new Push(to,priority,title,message)).enqueue(new Callback<Response>() {
+    private void setMessage(String to, String title, String message){
+        fcmService.postFCMBody(new Push(to,title,message)).enqueue(new Callback<Response>() {
             @Override
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                 if(response.isSuccessful()){
-                    Response repo = response.body();
-                    Log.d(TAG, "response.getSuccess : " + repo.getSuccess());
+                    String repo = response.body().toString();
+                    Log.d(TAG, "response.getSuccess : " + repo.toString());
                 }else{
                     Log.d(TAG, "body 없음" );
                 }
@@ -300,7 +299,42 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onFailure 실행됨"+ t.toString());
             }
         });
-    }*/
+    }
+*/
+    public class NetworkTask extends AsyncTask<Void, Void, String>{
+        private String msg;
 
-    // private void sendPostToFCM
+        public NetworkTask(String msg){
+            this.msg = msg;
+        }
+        @Override
+        protected String doInBackground(Void... voids) {
+            try{
+                // FMC 메시지 생성
+                JSONObject root = new JSONObject();
+                JSONObject data = new JSONObject();
+                data.put("title", TITLE);
+                data.put("message", message);
+                root.put("to",TO);
+                root.put("data", data);
+
+                Log.d(TAG,root.toString());
+                URL url = new URL(FCM_URL);
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("POST");
+                con.setDoOutput(true);
+                con.setDoInput(true);
+                con.addRequestProperty("Authorization", "key=" + KEY);
+                con.addRequestProperty("Content-Type","application/json");
+                OutputStream os = con.getOutputStream();
+                os.write(root.toString().getBytes("utf-8"));
+                os.flush();
+                con.getResponseCode();
+                Log.d(TAG,con.toString());
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
 }
