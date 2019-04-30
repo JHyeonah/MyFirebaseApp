@@ -31,8 +31,8 @@
         android:layout_below="@id/googleLoginButton"
         android:layout_alignLeft="@+id/googleLoginButton"
         android:layout_marginTop="20dp"
-        android:paddingTop="17dp"
-        android:paddingBottom="17dp"
+        android:paddingTop="19dp"
+        android:paddingBottom="19dp"
         android:paddingLeft="25dp"
         android:id="@+id/facebookLoginButton"
         android:elevation="3dp"/>

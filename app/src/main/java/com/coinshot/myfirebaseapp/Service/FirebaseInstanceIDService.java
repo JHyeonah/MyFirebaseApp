@@ -17,7 +17,6 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class FirebaseInstanceIDService extends FirebaseMessagingService {
     final String TAG = "FCM";
-    int i = 0;
 
     @Override
     public void onNewToken(String s) {
@@ -52,6 +51,7 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
 
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 
+        // 오레오 이후부터 채널을 통해 알림을 여러가지 용도로 나누어 관리
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             String channel_name = getString(R.string.default_notification_channel_id);
 
