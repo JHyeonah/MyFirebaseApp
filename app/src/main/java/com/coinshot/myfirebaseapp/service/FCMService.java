@@ -18,10 +18,4 @@ public interface FCMService {
     @POST("/fcm/send")
     Call<Response> postFCMBody(@Body Push push);
 
-    /*
-    public static final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://fcm.googleapis.com/fcm/send/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-            */
 }

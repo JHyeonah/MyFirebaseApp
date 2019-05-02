@@ -26,12 +26,10 @@ public class PopupActivity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+        // 애니메이션 설정
         overridePendingTransition(R.anim.slide_down, R.anim.fui_slide_in_right);
-        DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
-        int width = dm.widthPixels;
 
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-
         // 팝업 화면 출력 시 배경이 검게 되지 않음
         layoutParams.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
         layoutParams.dimAmount = 0f;
@@ -54,6 +52,7 @@ public class PopupActivity extends Activity {
             @Override
             public void run() {
                 finish();
+                overridePendingTransition(R.anim.slide_down, R.anim.fui_slide_in_right);
             }
         }, 4000);
 

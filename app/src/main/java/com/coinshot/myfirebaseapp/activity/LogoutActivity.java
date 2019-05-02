@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.coinshot.myfirebaseapp.R;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.LoginButton;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class LogoutActivity extends AppCompatActivity {
     TextView emailText;
