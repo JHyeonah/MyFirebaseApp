@@ -27,7 +27,7 @@ public class PopupActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         // 애니메이션 설정
-        overridePendingTransition(R.anim.slide_down, R.anim.fui_slide_in_right);
+        overridePendingTransition(R.anim.slide_down, R.anim.slide_up);
 
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
         // 팝업 화면 출력 시 배경이 검게 되지 않음
@@ -52,7 +52,7 @@ public class PopupActivity extends Activity {
             @Override
             public void run() {
                 finish();
-                overridePendingTransition(R.anim.slide_down, R.anim.fui_slide_in_right);
+                overridePendingTransition(R.anim.slide_down, R.anim.slide_up);
             }
         }, 4000);
 
