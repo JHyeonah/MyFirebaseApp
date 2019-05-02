@@ -12,6 +12,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.coinshot.myfirebaseapp.R;
+import com.coinshot.myfirebaseapp.model.Push;
+import com.coinshot.myfirebaseapp.model.Response;
+import com.coinshot.myfirebaseapp.service.FCMService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -23,19 +26,33 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class PushActivity extends AppCompatActivity {
-    EditText title_et, content_et;
+    EditText titleEt, contentEt;
     Button sendBtn, cancelBtn;
     String title, content, token;
 
-    final String TAG = "LOGIN";
+    public static final String TAG = "LOGIN";
+
+    FCMService service;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_push);
 
-        title_et = findViewById(R.id.title_et);
-        content_et = findViewById(R.id.content_et);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://fcm.googleapis.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        service = retrofit.create(FCMService.class);
+
+        titleEt = findViewById(R.id.title_et);
+        contentEt = findViewById(R.id.content_et);
         sendBtn = findViewById(R.id.sendBtn);
         cancelBtn = findViewById(R.id.cancelBtn);
 
@@ -44,14 +61,14 @@ public class PushActivity extends AppCompatActivity {
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                title = title_et.getText().toString();
-                content = content_et.getText().toString();
+                title = titleEt.getText().toString();
+                content = contentEt.getText().toString();
 
                 if(title.trim().length() == 0 || content.trim().length() == 0){
                     Toast.makeText(getApplicationContext(), "제목, 내용을 모두 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }else{
-                    NetworkTask networkTask = new NetworkTask(title, content);
-                    networkTask.execute();
+                    NetworkTask networkTask = new NetworkTask(service, title, content);
+                    networkTask.execute(token);
                     Toast.makeText(getApplicationContext(), "푸시가 발송되었습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -84,16 +101,37 @@ public class PushActivity extends AppCompatActivity {
                 });
     }
 
-    public class NetworkTask extends AsyncTask<Void, Void, String> {
+    public class NetworkTask extends AsyncTask<String, Void, String> {
         private String msg;
         private String title;
+        private FCMService service;
 
-        public NetworkTask(String title, String msg){
+        public NetworkTask(FCMService service, String title, String msg){
             this.msg = msg;
             this.title = title;
+            this.service = service;
         }
         @Override
-        protected String doInBackground(Void... voids) {
+        protected String doInBackground(String... tokens) {
+            Push push = new Push(tokens[0], title, msg);
+
+            Log.d(TAG, push.toString());
+            Call<Response> call = service.postFCMBody(push);
+            call.enqueue(new Callback<Response>() {
+                @Override
+                public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+                    Log.i(TAG, "onResponse: call: " + call);
+                    Log.i(TAG, "onResponse: response: " + response);
+                }
+
+                @Override
+                public void onFailure(Call<Response> call, Throwable t) {
+                    Log.e(TAG, "onFailure: call failed: " + call, t);
+                }
+            });
+
+            return null;
+            /*
             try{
                 // FMC 메시지 생성
                 JSONObject root = new JSONObject();
@@ -120,6 +158,7 @@ public class PushActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             return null;
+            */
         }
     }
 }

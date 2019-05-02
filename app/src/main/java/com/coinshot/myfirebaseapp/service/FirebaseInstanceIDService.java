@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.coinshot.myfirebaseapp.activity.MainActivity;
 import com.coinshot.myfirebaseapp.R;
+import com.coinshot.myfirebaseapp.activity.PopupActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -47,7 +48,7 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
                 .setContentText(message)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
+                .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE | Notification.PRIORITY_MAX);
 
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -63,6 +64,13 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
             channelMsg.setShowBadge(false);
             notichannel.createNotificationChannel(channelMsg);
 
+        }else{
+            // 오레오 미만 버전에서는 activity로 상단에 팝업 띄워줌
+            Intent popupIntent = new Intent(getApplicationContext(), PopupActivity.class);
+            popupIntent.putExtra("title", title);
+            popupIntent.putExtra("content", message);
+            popupIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(popupIntent);
         }
         notificationManager.notify((int)(System.currentTimeMillis()/1000),notificationBuilder.build());
     }

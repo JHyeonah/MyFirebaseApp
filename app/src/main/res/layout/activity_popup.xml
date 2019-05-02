@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="90dp"
+    android:padding="10dp"
+    android:elevation="5dp"
+    android:background="#ffffff">
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_stat_ic_notification"
+        android:id="@+id/ic_noti"
+        android:layout_marginLeft="10dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:layout_toRightOf="@+id/ic_noti"
+        android:textColor="@color/colorAccent"
+        android:layout_marginLeft="10dp"
+        android:textSize="13dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ic_noti"
+        android:layout_marginTop="5dp"
+        android:textColor="#000000"
+        android:textSize="15sp"
+        android:layout_alignLeft="@+id/ic_noti"
+        android:text="Title"
+        android:id="@+id/title" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/content"
+        android:layout_below="@+id/title"
+        android:layout_marginTop="5dp"
+        android:id="@+id/content"
+        android:textColor="#3e3e3e"
+        android:layout_alignLeft="@+id/ic_noti"
+        android:textSize="13dp"/>
+</RelativeLayout>

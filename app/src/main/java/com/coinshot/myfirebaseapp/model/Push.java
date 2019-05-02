@@ -6,12 +6,41 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Push {
+    public String to;
+    public Data data;
+
+    public Push(String to, String title, String message){
+        this.to = to;
+        data = new Data(title, message);
+    }
+
+    @Override
+    public String toString() {
+        return "Push{" + "to='" + to + '\'' + ", data=" + data + '}' ;
+    }
+
+    public static class Data{
+        public String title;
+        public String message;
+
+        public Data(String title, String message){
+            this.title = title;
+            this.message = message;
+        }
+
+        @Override
+        public String toString() {
+            return "Data{" + "title='" + title + '\'' + ", message='" + message + '\'' + '}';
+        }
+    }
+
+    /*
     @SerializedName("to")
     @Expose
     private String to;
-  /*  @SerializedName("priority")
+    @SerializedName("priority")
     @Expose
-    private String priority;*/
+    private String priority;
     @SerializedName("data")
     @Expose
     private Data data;
@@ -31,14 +60,14 @@ public class Push {
     public void setTo(String to) {
         this.to = to;
     }
-/*
+
     public String getPriority() {
         return priority;
     }
 
     public void setPriority(String priority) {
         this.priority = priority;
-    }*/
+    }
 
     public Data getData() {
         return data;
@@ -78,5 +107,5 @@ public class Push {
             this.message = message;
         }
 
-    }
+    }*/
 }

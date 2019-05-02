@@ -15,11 +15,13 @@ public interface FCMService {
             "Content-Type: application/json",
             "Authorization: key=AAAA0qxo8nQ:APA91bEdUQrgLU-UiYUi7veXJFXPvKuj7VukwjjVUyEEPXnwJi4K2vC3-X92mlKrLAfZgo9a829waphnWFf16E081kI2GyMpt3-ksvPCPTGWTvfNDNYLXsE0JGQllmUITqafxGoQJ8iF"
     })
-    @POST("/")
+    @POST("/fcm/send")
     Call<Response> postFCMBody(@Body Push push);
 
+    /*
     public static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://fcm.googleapis.com/fcm/send/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
+            */
 }
