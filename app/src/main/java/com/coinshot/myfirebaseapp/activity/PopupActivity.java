@@ -7,11 +7,14 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.coinshot.myfirebaseapp.R;
@@ -21,6 +24,8 @@ import java.util.TimerTask;
 
 public class PopupActivity extends Activity {
     TextView titleTv, contentTv;
+    RelativeLayout popupLayout;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +43,7 @@ public class PopupActivity extends Activity {
 
         titleTv = findViewById(R.id.title);
         contentTv = findViewById(R.id.content);
+        popupLayout = findViewById(R.id.popupLayout);
 
         Intent intent = getIntent();
         String title = intent.getStringExtra("title");
@@ -56,5 +62,14 @@ public class PopupActivity extends Activity {
             }
         }, 4000);
 
+        popupLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 }
