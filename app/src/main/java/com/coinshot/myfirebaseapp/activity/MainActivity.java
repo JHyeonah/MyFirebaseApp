@@ -12,6 +12,9 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.coinshot.myfirebaseapp.R;
+import com.coinshot.myfirebaseapp.model.Push;
+import com.coinshot.myfirebaseapp.model.Response;
+import com.coinshot.myfirebaseapp.service.FCMService;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -47,13 +50,17 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 100;
     private static final int RC_SIGN_OUT = 300;
 
-    private final String TITLE = "로그인 알림";
-    private String token = "";
+    String title, to;
 
     private GoogleSignInClient googleSignInClient;
     private FirebaseAuth firebaseAuth;
@@ -63,16 +70,22 @@ public class MainActivity extends AppCompatActivity {
 
     Button googleLoginButton;
     LoginButton facebookLoginButton;
+    FCMService service;
 
-    final String TAG = "LOGIN";
+    public static final String TAG = "LOGIN";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        AppEventsLogger.activateApp(this);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://fcm.googleapis.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        service = retrofit.create(FCMService.class);
+        title = "로그인 알림";
+
         callbackManager = CallbackManager.Factory.create();
 
         googleLoginButton = findViewById(R.id.googleLoginButton);
@@ -165,8 +178,8 @@ public class MainActivity extends AppCompatActivity {
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             String email = user.getEmail();
                             String message = "구글로 로그인 했습니다.";
-                            NetworkTask networkTask = new NetworkTask(message);
-                            networkTask.execute();
+                            NetworkTask networkTask = new NetworkTask(service, title, message);
+                            networkTask.execute(to);
 
                             Toast.makeText(MainActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
 
@@ -183,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 페이스북 로그인 처리
-    private void handleFacebookAccessToken(AccessToken token){
+    private void handleFacebookAccessToken(final AccessToken token){
         Log.d(TAG, "handleFacebookAccessToken : " + token);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
@@ -196,8 +209,8 @@ public class MainActivity extends AppCompatActivity {
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             String email = "";
                             String message = "페이스북으로 로그인 했습니다.";
-                            NetworkTask networkTask = new NetworkTask(message);
-                            networkTask.execute();
+                            NetworkTask networkTask = new NetworkTask(service, title, message);
+                            networkTask.execute(to);
 
                             if(user.getEmail() != null){
                                 email = user.getEmail();
@@ -230,9 +243,9 @@ public class MainActivity extends AppCompatActivity {
                             Log.w(TAG, "getInstanceID failed", task.getException());
                             return;
                         }
-                        token = task.getResult().getToken();
+                        to = task.getResult().getToken();
 
-                        Log.d(TAG, token);
+                        Log.d(TAG, to);
                     }
                 });
     }
@@ -269,39 +282,34 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public class NetworkTask extends AsyncTask<Void, Void, String>{
+    public static class NetworkTask extends AsyncTask<String, Void, String>{
         private String msg;
+        private String title;
+        private FCMService service;
 
-        public NetworkTask(String msg){
+        public NetworkTask(FCMService service, String title, String msg){
             this.msg = msg;
+            this.title = title;
+            this.service = service;
         }
         @Override
-        protected String doInBackground(Void... voids) {
-            try{
-                // FMC 메시지 생성
-                JSONObject root = new JSONObject();
-                JSONObject data = new JSONObject();
-                data.put("title", TITLE);
-                data.put("message", msg);
-                root.put("to", token);
-                root.put("data", data);
+        protected String doInBackground(String... tokens) {
+            Push push = new Push(tokens[0], title, msg);
 
-                Log.d(TAG,root.toString());
-                URL url = new URL(getString(R.string.fcm_url));
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                con.setRequestMethod("POST");
-                con.setDoOutput(true);
-                con.setDoInput(true);
-                con.addRequestProperty("Authorization", "key=" + getString(R.string.server_key));
-                con.addRequestProperty("Content-Type","application/json");
-                OutputStream os = con.getOutputStream();
-                os.write(root.toString().getBytes("utf-8"));
-                os.flush();
-                con.getResponseCode();
-                Log.d(TAG,con.toString());
-            }catch(Exception e){
-                e.printStackTrace();
-            }
+            Log.d(TAG, push.toString());
+            Call<Response> call = service.postFCMBody(push);
+            call.enqueue(new Callback<Response>() {
+                @Override
+                public void onResponse(@NonNull Call<Response> call, @NonNull retrofit2.Response<Response> response) {
+                    Log.i(TAG, "onResponse: call: " + call);
+                    Log.i(TAG, "onResponse: response: " + response);
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Response> call, @NonNull Throwable t) {
+                    Log.e(TAG, "onFailure: call failed: " + call, t);
+                }
+            });
             return null;
         }
     }

@@ -101,7 +101,7 @@ public class PushActivity extends AppCompatActivity {
                 });
     }
 
-    public class NetworkTask extends AsyncTask<String, Void, String> {
+    public static class NetworkTask extends AsyncTask<String, Void, String> {
         private String msg;
         private String title;
         private FCMService service;
@@ -119,13 +119,13 @@ public class PushActivity extends AppCompatActivity {
             Call<Response> call = service.postFCMBody(push);
             call.enqueue(new Callback<Response>() {
                 @Override
-                public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+                public void onResponse(@NonNull Call<Response> call, @NonNull retrofit2.Response<Response> response) {
                     Log.i(TAG, "onResponse: call: " + call);
                     Log.i(TAG, "onResponse: response: " + response);
                 }
 
                 @Override
-                public void onFailure(Call<Response> call, Throwable t) {
+                public void onFailure(@NonNull Call<Response> call, @NonNull Throwable t) {
                     Log.e(TAG, "onFailure: call failed: " + call, t);
                 }
             });
