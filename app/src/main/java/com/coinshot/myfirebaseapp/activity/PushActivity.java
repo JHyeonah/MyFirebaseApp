@@ -1,5 +1,6 @@
 package com.coinshot.myfirebaseapp.activity;
 
+import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.coinshot.myfirebaseapp.R;
+import com.coinshot.myfirebaseapp.databinding.ActivityPushBinding;
 import com.coinshot.myfirebaseapp.model.Push;
 import com.coinshot.myfirebaseapp.model.Response;
 import com.coinshot.myfirebaseapp.service.FCMService;
@@ -32,9 +34,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PushActivity extends AppCompatActivity {
-    EditText titleEt, contentEt;
-    Button sendBtn, cancelBtn;
     String title, content, token;
+    ActivityPushBinding binding;
 
     public static final String TAG = "LOGIN";
 
@@ -43,7 +44,7 @@ public class PushActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_push);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_push);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://fcm.googleapis.com")
@@ -51,18 +52,13 @@ public class PushActivity extends AppCompatActivity {
                 .build();
         service = retrofit.create(FCMService.class);
 
-        titleEt = findViewById(R.id.title_et);
-        contentEt = findViewById(R.id.content_et);
-        sendBtn = findViewById(R.id.sendBtn);
-        cancelBtn = findViewById(R.id.cancelBtn);
-
         getToken();
 
-        sendBtn.setOnClickListener(new View.OnClickListener() {
+        binding.sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                title = titleEt.getText().toString();
-                content = contentEt.getText().toString();
+                title = binding.titleEt.getText().toString();
+                content = binding.contentEt.getText().toString();
 
                 if(title.trim().length() == 0 || content.trim().length() == 0){
                     Toast.makeText(getApplicationContext(), "제목, 내용을 모두 입력해주세요.", Toast.LENGTH_SHORT).show();
@@ -74,7 +70,7 @@ public class PushActivity extends AppCompatActivity {
             }
         });
 
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
+        binding.cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

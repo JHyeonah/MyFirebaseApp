@@ -1,6 +1,7 @@
 package com.coinshot.myfirebaseapp.activity;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.coinshot.myfirebaseapp.R;
+import com.coinshot.myfirebaseapp.databinding.ActivityMainBinding;
 import com.coinshot.myfirebaseapp.model.Push;
 import com.coinshot.myfirebaseapp.model.Response;
 import com.coinshot.myfirebaseapp.service.FCMService;
@@ -68,29 +70,27 @@ public class MainActivity extends AppCompatActivity {
     private GoogleSignInOptions gso;
     private CallbackManager callbackManager;
 
-    Button googleLoginButton;
-    LoginButton facebookLoginButton;
     FCMService service;
+    ActivityMainBinding binding;
 
     public static final String TAG = "LOGIN";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding.setActivity(this);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://fcm.googleapis.com")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         service = retrofit.create(FCMService.class);
+
         title = "로그인 알림";
 
         callbackManager = CallbackManager.Factory.create();
-
-        googleLoginButton = findViewById(R.id.googleLoginButton);
-        facebookLoginButton = findViewById(R.id.facebookLoginButton);
-        facebookLoginButton.setReadPermissions("email", "public_profile");
+        binding.facebookLoginButton.setReadPermissions("email", "public_profile");
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         googleSignInClient = GoogleSignIn.getClient(this,gso);
 
         // 구글 로그인 버튼
-        googleLoginButton.setOnClickListener(new View.OnClickListener() {
+        binding.googleLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signIn();
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // 페이스북 로그인 버튼
-        facebookLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        binding.facebookLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "facebook:onSuccess : " + loginResult);
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
             }catch (ApiException e){
-
+                e.printStackTrace();
             }
         }else if(requestCode == RC_SIGN_OUT){
             signOut();
@@ -207,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
                         if(task.isSuccessful()){
                             Log.d(TAG, "signInWithCredentialFacebook : success");
                             FirebaseUser user = firebaseAuth.getCurrentUser();
-                            String email = "";
+                            String email;
                             String message = "페이스북으로 로그인 했습니다.";
                             NetworkTask networkTask = new NetworkTask(service, title, message);
                             networkTask.execute(to);

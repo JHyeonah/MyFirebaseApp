@@ -1,41 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activity.MainActivity"
-  >
+<layout>
+    <data>
+        <variable name="activity"
+            type="com.coinshot.myfirebaseapp.activity.MainActivity"/>
+    </data>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".activity.MainActivity"
+        >
 
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/android"
-        android:layout_centerInParent="true"
-        android:layout_above="@+id/googleLoginButton" />
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/android"
+            android:layout_centerInParent="true"
+            android:layout_above="@+id/googleLoginButton" />
 
-    <Button
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/btn_google_signin_light_normal_hdpi"
-        android:layout_marginTop="50dp"
-        android:text="Sign in with google"
-        android:layout_centerInParent="true"
-        android:id="@+id/googleLoginButton"/>
+        <Button
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_google_signin_light_normal_hdpi"
+            android:layout_marginTop="50dp"
+            android:text="Sign in with google"
+            android:layout_centerInParent="true"
+            android:id="@+id/googleLoginButton"/>
 
-    <com.facebook.login.widget.LoginButton
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_below="@id/googleLoginButton"
-        android:layout_alignLeft="@+id/googleLoginButton"
-        android:layout_marginTop="20dp"
-        android:paddingTop="19dp"
-        android:paddingBottom="19dp"
-        android:paddingLeft="25dp"
-        android:id="@+id/facebookLoginButton"
-        android:elevation="3dp"/>
+        <com.facebook.login.widget.LoginButton
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/googleLoginButton"
+            android:layout_alignLeft="@+id/googleLoginButton"
+            android:layout_marginTop="20dp"
+            android:paddingTop="19dp"
+            android:paddingBottom="19dp"
+            android:paddingLeft="25dp"
+            android:id="@+id/facebookLoginButton"
+            android:elevation="3dp"/>
 
 
-</RelativeLayout>
+    </RelativeLayout>
+</layout>

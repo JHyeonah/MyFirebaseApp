@@ -1,6 +1,7 @@
 package com.coinshot.myfirebaseapp.activity;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -9,44 +10,41 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.coinshot.myfirebaseapp.R;
+import com.coinshot.myfirebaseapp.databinding.ActivityWebviewBinding;
 
 public class WebviewActivity extends AppCompatActivity {
-    WebView webView;
     String url;
-    ImageView closeBtn, backBtn;
 
+    WebView wView;
+    ActivityWebviewBinding binding;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_webview);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_webview);
 
-        webView = findViewById(R.id.webView);
-        closeBtn = findViewById(R.id.closeBtn);
-        backBtn = findViewById(R.id.backBtn);
-
+        wView = binding.webView;
         Intent intent = getIntent();
         url = intent.getStringExtra("url");
 
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl(url);
-        webView.setWebViewClient(new MyWebViewClient());
+        wView.getSettings().setJavaScriptEnabled(true);
+        wView.loadUrl(url);
+        wView.setWebViewClient(new MyWebViewClient());
 
-        closeBtn.setOnClickListener(new View.OnClickListener() {
+        binding.closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
 
-        backBtn.setOnClickListener(new View.OnClickListener() {
+        binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(webView.canGoBack()){
-                    webView.goBack();
+                if(wView.canGoBack()){
+                    wView.goBack();
                 }
             }
         });
@@ -67,8 +65,8 @@ public class WebviewActivity extends AppCompatActivity {
     }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()){
-            webView.goBack();
+        if((keyCode == KeyEvent.KEYCODE_BACK) && wView.canGoBack()){
+            wView.goBack();
             return true;
         }
         return super.onKeyDown(keyCode, event);

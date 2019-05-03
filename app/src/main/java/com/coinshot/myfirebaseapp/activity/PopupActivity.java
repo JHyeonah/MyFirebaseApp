@@ -3,6 +3,7 @@ package com.coinshot.myfirebaseapp.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -18,14 +19,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.coinshot.myfirebaseapp.R;
+import com.coinshot.myfirebaseapp.databinding.ActivityPopupBinding;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class PopupActivity extends Activity {
-    TextView titleTv, contentTv;
-    RelativeLayout popupLayout;
     String url;
+    ActivityPopupBinding binding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,19 +41,15 @@ public class PopupActivity extends Activity {
         layoutParams.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
         layoutParams.dimAmount = 0f;
         getWindow().setAttributes(layoutParams);
-        setContentView(R.layout.activity_popup);
-
-        titleTv = findViewById(R.id.title);
-        contentTv = findViewById(R.id.content);
-        popupLayout = findViewById(R.id.popupLayout);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_popup);
 
         Intent intent = getIntent();
         String title = intent.getStringExtra("title");
         String content = intent.getStringExtra("content");
         url = intent.getStringExtra("url");
 
-        titleTv.setText(title);
-        contentTv.setText(content);
+        binding.title.setText(title);
+        binding.content.setText(content);
 
         // 팝업 사라짐
         Timer timer = new Timer();
@@ -64,7 +61,7 @@ public class PopupActivity extends Activity {
             }
         }, 4000);
 
-        popupLayout.setOnClickListener(new View.OnClickListener() {
+        binding.popupLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent;
