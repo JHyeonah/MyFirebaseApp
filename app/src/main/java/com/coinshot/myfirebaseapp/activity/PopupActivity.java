@@ -25,6 +25,7 @@ import java.util.TimerTask;
 public class PopupActivity extends Activity {
     TextView titleTv, contentTv;
     RelativeLayout popupLayout;
+    String url;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class PopupActivity extends Activity {
         Intent intent = getIntent();
         String title = intent.getStringExtra("title");
         String content = intent.getStringExtra("content");
+        url = intent.getStringExtra("url");
 
         titleTv.setText(title);
         contentTv.setText(content);
@@ -65,7 +67,13 @@ public class PopupActivity extends Activity {
         popupLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                Intent intent;
+                if(url != null){
+                    intent = new Intent(getApplicationContext(), WebviewActivity.class);
+                    intent.putExtra("url", url);
+                }else{
+                    intent = new Intent(getApplicationContext(), MainActivity.class);
+                }
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();

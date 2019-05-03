@@ -9,10 +9,12 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.coinshot.myfirebaseapp.activity.MainActivity;
 import com.coinshot.myfirebaseapp.R;
 import com.coinshot.myfirebaseapp.activity.PopupActivity;
+import com.coinshot.myfirebaseapp.activity.WebviewActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -34,13 +36,21 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
     }
 
     private void sendNotification(RemoteMessage remoteMessage){
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,(int)(System.currentTimeMillis()/1000),intent,PendingIntent.FLAG_ONE_SHOT);
-
         String title = remoteMessage.getData().get("title");
         String message = remoteMessage.getData().get("message");
+        String url = remoteMessage.getData().get("url");
         String channel = "채널";
+
+        Intent intent;
+        if(url != null){
+            intent = new Intent(this, WebviewActivity.class);
+            intent.putExtra("url", url);
+        }else{
+            intent = new Intent(this, MainActivity.class);
+        }
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,(int)(System.currentTimeMillis()/1000),intent,PendingIntent.FLAG_ONE_SHOT);
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channel)
                 .setSmallIcon(R.drawable.ic_stat_ic_notification)
@@ -69,6 +79,7 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
             Intent popupIntent = new Intent(getApplicationContext(), PopupActivity.class);
             popupIntent.putExtra("title", title);
             popupIntent.putExtra("content", message);
+            popupIntent.putExtra("url", url);
             popupIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(popupIntent);
         }
