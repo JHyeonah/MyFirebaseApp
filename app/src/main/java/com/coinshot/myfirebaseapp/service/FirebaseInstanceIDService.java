@@ -6,21 +6,35 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.coinshot.myfirebaseapp.activity.MainActivity;
 import com.coinshot.myfirebaseapp.R;
-import com.coinshot.myfirebaseapp.activity.PopupActivity;
 import com.coinshot.myfirebaseapp.activity.WebviewActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class FirebaseInstanceIDService extends FirebaseMessagingService {
     final String TAG = "FCM";
 
+    WindowManager wm;
+    View mView;
+    boolean flag = true;
     @Override
     public void onNewToken(String s) {
         super.onNewToken(s);
@@ -36,9 +50,9 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
     }
 
     private void sendNotification(RemoteMessage remoteMessage){
-        String title = remoteMessage.getData().get("title");
-        String message = remoteMessage.getData().get("message");
-        String url = remoteMessage.getData().get("url");
+        final String title = remoteMessage.getData().get("title");
+        final String message = remoteMessage.getData().get("message");
+        final String url = remoteMessage.getData().get("url");
         String channel = "채널";
 
         Intent intent;
@@ -75,13 +89,64 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
             notichannel.createNotificationChannel(channelMsg);
 
         }else{
-            // 오레오 미만 버전에서는 activity로 상단에 팝업 띄워줌
-            Intent popupIntent = new Intent(getApplicationContext(), PopupActivity.class);
-            popupIntent.putExtra("title", title);
-            popupIntent.putExtra("content", message);
-            popupIntent.putExtra("url", url);
-            popupIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(popupIntent);
+            // 오레오 미만 버전에서는 뷰를 상단에 팝업으로 띄워줌
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                        try{
+                            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            wm = (WindowManager)getSystemService(WINDOW_SERVICE);
+
+                            WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT,
+                                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                                    WindowManager.LayoutParams.TYPE_TOAST,
+                                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                                    PixelFormat.TRANSLUCENT
+                            );
+                            params.gravity = Gravity.TOP;
+
+                            mView = inflater.inflate(R.layout.activity_popup, null);
+
+                            final TextView titleTv = mView.findViewById(R.id.title);
+                            final TextView contentTv = mView.findViewById(R.id.content);
+                            RelativeLayout popupLayout = mView.findViewById(R.id.popupLayout);
+
+                            titleTv.setText(title);
+                            contentTv.setText(message);
+
+                            popupLayout.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent;
+                                    if(url != null){
+                                        intent = new Intent(getApplicationContext(), WebviewActivity.class);
+                                        intent.putExtra("url", url);
+                                    }else{
+                                        intent = new Intent(getApplicationContext(), MainActivity.class);
+                                    }
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
+
+                                }
+                            });
+                            wm.addView(mView, params);
+
+
+                                Timer timer = new Timer();
+                                timer.schedule(new TimerTask() {
+                                    @Override
+                                    public void run() {
+                                        wm.removeView(mView);
+                                    }
+                                }, 3000);
+
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                }
+            });
+
         }
         notificationManager.notify((int)(System.currentTimeMillis()/1000),notificationBuilder.build());
     }
