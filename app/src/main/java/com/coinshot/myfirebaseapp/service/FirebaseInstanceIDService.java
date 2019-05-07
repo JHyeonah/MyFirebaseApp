@@ -34,7 +34,6 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
 
     WindowManager wm;
     View mView;
-    boolean flag = true;
     @Override
     public void onNewToken(String s) {
         super.onNewToken(s);
@@ -131,7 +130,6 @@ public class FirebaseInstanceIDService extends FirebaseMessagingService {
                                 }
                             });
                             wm.addView(mView, params);
-
 
                                 Timer timer = new Timer();
                                 timer.schedule(new TimerTask() {

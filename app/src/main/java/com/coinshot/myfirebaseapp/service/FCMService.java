@@ -13,7 +13,7 @@ import retrofit2.http.POST;
 public interface FCMService {
     @Headers({
             "Content-Type: application/json",
-            "Authorization: key=AAAA0qxo8nQ:APA91bEdUQrgLU-UiYUi7veXJFXPvKuj7VukwjjVUyEEPXnwJi4K2vC3-X92mlKrLAfZgo9a829waphnWFf16E081kI2GyMpt3-ksvPCPTGWTvfNDNYLXsE0JGQllmUITqafxGoQJ8iF"
+            "Authorization: key=**"
     })
     @POST("/fcm/send")
     Call<Response> postFCMBody(@Body Push push);
